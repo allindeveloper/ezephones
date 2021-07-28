@@ -25,6 +25,10 @@ const Home = () =>{
 
     const commonStyles = useCommonStyles()
     const homeClasses =  useStyles()
+
+    const handleChangeStorageType = ()=>{
+        
+    }
     return(
         <div className={styles?.root}>
                 <Grid container spacing={4} className={homeClasses.topContainer}>
@@ -40,7 +44,10 @@ const Home = () =>{
                         </div>
                     </Grid>
                 </Grid>
-                <CategoriesSection />
+                <CategoriesSection 
+                caption="Categories"
+                handleChangeStorageType={handleChangeStorageType}
+                />
         </div>
     )
 }

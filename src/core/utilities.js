@@ -49,40 +49,40 @@ export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,splitted,s
         result1 = gradeRule(value,'grade')
         if(result1 !== false){
             if(result1?.name === 'grade'){
-                query += `&grade=${result1?.value}`
+                query.includes('grade') ? query += `,${result1?.value}`: query += `&grade=${result1?.value}`
             }
             else if(result1?.name === 'storageSizeString'){
-                query += `&storageSizeString=${result1?.value}`
+                query.includes('storageSizeString') ? query += `,${result1?.value}`: query += `&storageSizeString=${result1?.value}`
             }
             else if(result1?.name === 'category') {
-                query += `&category=${result1?.value}`
+                query.includes('category') ? query += `,${result1?.value}`  :  query += `&category=${result1?.value}`
             }
             final.push(result1)
         }
         result2 = storageRule('GB',value,'storageSizeString')
         if(result2 !== false){
              if(result2?.name === 'storageSizeString'){
-                query += `&storageSizeString=${result2?.value}`
+                query.includes('storageSizeString') ? query += `,${result2?.value}`: query += `&storageSizeString=${result2?.value}`
             }
             else if(result2?.name === 'grade'){
-                query += `&grade=${result2?.value}`
+                query.includes('grade') ? query += `,${result2?.value}`: query += `&grade=${result2?.value}`
             }
             
             else if(result2?.name === 'category') {
-                query += `&category=${result2?.value}`
+                query.includes('category') ? query += `,${result2?.value}`  :  query += `&category=${result2?.value}`
             }
             final.push(result2)
         }
         result3 = nameCategoryRule(value,'category')
         if(result3 !== false){
             if(result3?.name === 'grade'){
-                query += `&grade=${result3?.value}`
+                query.includes('grade') ? query += `,${result3?.value}`: query += `&grade=${result3?.value}`
             }
             else if(result3?.name === 'storageSizeString'){
-                query += `&storageSizeString=${result3?.value}`
+                query.includes('storageSizeString') ? query += `,${result3?.value}`: query += `&storageSizeString=${result3?.value}`
             }
             else if(result3?.name === 'category') {
-                query += `&category=${result3?.value}`
+                query.includes('category') ? query += `,${result3?.value}`  :  query += `&category=${result3?.value}`
             }
             final.push(result3)
         }
@@ -92,7 +92,9 @@ export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,splitted,s
     console.log('allresults',result1, result2, result3)
     console.log('result4',final)
     console.log('euqrrryyy',query)
-
+    
+    // const categoryOccurrence = (query.match(/category/g) || []).length;
+    // const finalQuery = 
    
     return query
 }
@@ -112,4 +114,10 @@ const nameCategoryRule = (value,name)=>{
     const checkStorage = trimedValue.endsWith('gb') && trimedValue.length > 2
 
    return /^[0-9a-zA-Z]+$/.test(trimedValue.toLowerCase()) === true  &&trimedValue.length > 2 && !checkStorage  ? {value,name} : false
+}
+
+export const filterObj = (obj,predicate)=>{
+   return Object.keys(obj)
+          .filter( key => predicate(obj[key]) )
+          .reduce( (res, key) => (res[key] = obj[key], res), {} );
 }

@@ -13,7 +13,7 @@ import SpaceTop from "../../components/SpaceTop";
 import CategoriesSection from "../../components/ui/CategoriesSection";
 import Axios from "../../core/axios";
 import useCommonStyles from "../../core/commonStyles";
-import { constants, formatRequestUrl } from "../../core/utilities";
+import { constants, filterObj, formatRequestUrl } from "../../core/utilities";
 import styles from "./home.module.css";
 const useStyles = makeStyles((theme) => ({
   mainHeader: {
@@ -81,6 +81,9 @@ const Home = () => {
   };
 
   const handleChangeCategoryType = (event)=>{
+    const newCategories = { ...categories, [event.target.name]: event.target.checked }
+    var filter = filterObj(newCategories,category => category === true)
+    
     setcategories({ ...categories, [event.target.name]: event.target.checked });
   }
   const handleSearchChange = (evt, name) => {
@@ -106,6 +109,7 @@ const Home = () => {
   if(debounceselectedStorageType !== ""){
     loadProducts(rangeValues?.[0],rangeValues?.[1],limit,debounceselectedStorageType)
   }
+  // if()
   },[debouncedproductsRangeValues,debounceselectedStorageType,limit,rangeValues])
 
   const handleInputChange = (e,name)=>{

@@ -1,9 +1,10 @@
-import { Grid, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles, useMediaQuery } from "@material-ui/core";
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from 'use-debounce';
 import appleshowcase from "../../assets/images/appleshowcase.png";
+import sadface from '../../assets/images/sadface.svg';
 import CustomButton from "../../components/CustomButton";
 import CustomInput from "../../components/CustomInput";
 import CustomLinearProgress from "../../components/CustomLinearProgress";
@@ -14,7 +15,6 @@ import Axios from "../../core/axios";
 import useCommonStyles from "../../core/commonStyles";
 import { formatRequestUrl } from "../../core/utilities";
 import styles from "./home.module.css";
-
 const useStyles = makeStyles((theme) => ({
   mainHeader: {
     fontSize: "34pt",
@@ -33,11 +33,17 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 0,
     },
   },
+  emptyProducts:{
+    margin:'80px 0',
+    textAlign:'center'
+  }
 }));
 
 const Home = () => {
   const commonStyles = useCommonStyles();
   const homeClasses = useStyles();
+  const matches = useMediaQuery("(min-width:600px)");
+
   const [products, setProducts] = useState([]);
   const [rangeValues, setrangeValues] = React.useState([50, 5000]);
   const [isLoading,setloading] = useState(false)
@@ -59,7 +65,6 @@ const Home = () => {
         formatRequestUrl(minPrice,maxPrice,limit,storageSize,splitted,otheryQuery)
       )
         .then(({ data }) => {
-          console.log("data of all products", data?.data?.data);
           setloading(false)
           setProducts(data?.data?.data ?? []);
         })
@@ -132,7 +137,7 @@ const Home = () => {
                 handleChange={(e) => handleSearchChange(e,'keywords')}
                 value={productsSearchData?.keywords}
                 id="searchproducts"
-                width="45ch"
+                width={matches && '45ch'}
                 placeholder="Enter Search Term (e.g IPhone x, 128GB or A1)"
                 />
                 </div>
@@ -169,6 +174,12 @@ const Home = () => {
                 {isLoading &&
                 <Grid item xs={12} >
                     <CustomLinearProgress />
+                    </Grid>
+                }
+                {!isLoading && products.length === 0 &&
+                <Grid item xs={12} className={homeClasses.emptyProducts}>
+                    <img src={sadface} alt="No Products" width="20%"/>
+                    <h5>No Products.</h5>
                     </Grid>
                 }
               {products &&!isLoading && products.length>0&&

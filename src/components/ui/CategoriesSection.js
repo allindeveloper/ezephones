@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, useMediaQuery } from "@material-ui/core";
 import clsx from "clsx";
 import React, { useRef } from "react";
 import useCommonStyles from "../../core/commonStyles";
@@ -34,6 +34,8 @@ const CategoriesSection = ({
   const commonStyles = useCommonStyles();
   const categoriesSectionClasses = useStyles();
   const rangeRef = useRef()
+  const matches = useMediaQuery("(min-width:600px)");
+
   return (
     <div
       className={clsx(categoriesSectionClasses.root, commonStyles.textWhite)}
@@ -54,7 +56,7 @@ const CategoriesSection = ({
       <div className={categoriesSectionClasses.alignCenter}>
         <CustomInput
           value={rangeValues?.[0]}
-          width="35ch"
+          width={matches && '35ch'}
           handleChange={(e)=>handleInputChange(e,'minPrice')}
           type={'number'}
           id="searchproducts"
@@ -64,7 +66,7 @@ const CategoriesSection = ({
         <CustomInput
           value={rangeValues?.[1]}
           handleChange={(e)=>handleInputChange(e,'maxPrice')}
-          width="35ch"
+          width={matches && '35ch'}
           type={'number'}
           id="searchproducts"
           placeholder="Max"

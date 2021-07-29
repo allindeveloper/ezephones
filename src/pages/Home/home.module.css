@@ -4,6 +4,12 @@
     margin-right: 40px;
 }
 
+@media only screen and (max-width: 479px) {
+    :root{
+      margin-left:15px ;
+        margin-right: 15px ;
+    }
+}
 .d_flex{
     display: flex;
 }

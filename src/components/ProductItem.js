@@ -10,17 +10,23 @@ const useStyles = makeStyles((theme) => ({
     color: constants.colors.white,
     height: "530px",
     marginBottom: "30px",
+    position:'relative'
   },
   innerText: {
     alignContent: "left",
     textAlign: "left",
     padding: "25px",
+    position: 'relative',
   },
   price: {
     fontSize: "24px",
   },
   actionButton: {
     textAlign: "center",
+    position: 'absolute',
+    bottom: '0px',
+    marginBottom:'20px',
+    left: '35%'
   },
   grade: {
     border: `2px solid ${constants.colors.white}`,
@@ -37,10 +43,14 @@ const ProductItem = ({ product }) => {
     <div className={productItemClasses?.root}>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         <div>
-        <SpaceTop length={22} />
+          <SpaceTop length={22} />
           <img
             width="100%"
-            src={product?.imgUrl === "" ? dummyphone : product?.imgUrl ?? dummyphone}
+            src={
+              product?.imgUrl === ""
+                ? dummyphone
+                : product?.imgUrl ?? dummyphone
+            }
             alt={product?.name}
           />
           <div className={productItemClasses?.innerText}>
@@ -63,10 +73,8 @@ const ProductItem = ({ product }) => {
               </>
             )}
             <SpaceTop length={30} />
-            {!product.lowestAsk && <SpaceTop length={60} />}
-            <div className={productItemClasses.actionButton}>
-              <CustomButton caption="Buy" />
-            </div>
+            {/* {!product.lowestAsk && <SpaceTop length={60} />} */}
+            
           </div>
         </div>
         {product?.lowestAsk && (
@@ -75,6 +83,13 @@ const ProductItem = ({ product }) => {
           </div>
         )}
       </div>
+      <div className={productItemClasses.actionButton}>
+              <CustomButton caption="Buy"
+              style={{
+                width:'100px'
+              }}
+              />
+            </div>
     </div>
   );
 };

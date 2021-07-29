@@ -51,7 +51,7 @@ const Home = () => {
     keywords:'',
     categories:''
   })
-  const [categories, setcategories] = useState(constants.objCategorues)
+  const [categories, setcategories] = useState(constants.objCategories)
   const [limit,setlimit ] = useState(50)
   const [selectedStorage, setselectedStorage] = useState('');
   const [debouncedproductsRangeValues] = useDebounce(rangeValues, 700);
@@ -83,16 +83,30 @@ const Home = () => {
   };
 
   const handleChangeCategoryType = (event)=>{
+    let extracted = "";
+    let filtered = {};
+    let updatedCategories = {}
+    if(event.target.name.toLowerCase() === "all"){
+      if(event.target.checked === true){
+        updatedCategories = Object.fromEntries(Object.keys(constants.objCategories).map((key) => [key, true]))
+      }else{
+        updatedCategories = Object.fromEntries(Object.keys(constants.objCategories).map((key) => [key, false]))
+      }
+      filtered = filterObj(updatedCategories,category => category === true)
+      extracted = extractValue(filtered)
+      setcategories({ ...updatedCategories, [event.target.name]: event.target.checked });
+    }else{
     const newCategories = { ...categories, [event.target.name]: event.target.checked }
-    var filtered = filterObj(newCategories,category => category === true)
-    const extracted = extractValue(filtered)
-    console.log('extractedextracted',extracted)
-    setproductsSearchData((prevState) => ({
-      ...prevState,
-      categories: extracted,
-    }));
+    filtered = filterObj(newCategories,category => category === true)
+    extracted = extractValue(filtered)
+    
     // debugger
     setcategories({ ...categories, [event.target.name]: event.target.checked });
+  }
+  setproductsSearchData((prevState) => ({
+    ...prevState,
+    categories: extracted,
+  }));
   }
   const handleSearchChange = (evt, name) => {
     setproductsSearchData((prevState) => ({

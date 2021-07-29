@@ -121,3 +121,13 @@ export const filterObj = (obj,predicate)=>{
           .filter( key => predicate(obj[key]) )
           .reduce( (res, key) => (res[key] = obj[key], res), {} );
 }
+
+export const extractValue = (filteredObj)=>{
+    let query = ``;
+    // debugger
+    for(let i in filteredObj){
+        query += `,${i}`
+    }
+    const fquery = query.substring(1); // remove first comma from string
+    return fquery
+}

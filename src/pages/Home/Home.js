@@ -13,7 +13,7 @@ import SpaceTop from "../../components/SpaceTop";
 import CategoriesSection from "../../components/ui/CategoriesSection";
 import Axios from "../../core/axios";
 import useCommonStyles from "../../core/commonStyles";
-import { constants, filterObj, formatRequestUrl } from "../../core/utilities";
+import { constants, extractValue, filterObj, formatRequestUrl } from "../../core/utilities";
 import styles from "./home.module.css";
 const useStyles = makeStyles((theme) => ({
   mainHeader: {
@@ -48,13 +48,15 @@ const Home = () => {
   const [rangeValues, setrangeValues] = React.useState([50, 5000]);
   const [isLoading,setloading] = useState(false)
   const [productsSearchData, setproductsSearchData] = useState({
-    keywords:''
+    keywords:'',
+    categories:''
   })
   const [categories, setcategories] = useState(constants.objCategorues)
   const [limit,setlimit ] = useState(50)
   const [selectedStorage, setselectedStorage] = useState('');
   const [debouncedproductsRangeValues] = useDebounce(rangeValues, 700);
   const [debounceselectedStorageType] = useDebounce(selectedStorage,700);
+  const [debouncedCategoryChecks] = useDebounce(productsSearchData.categories,700)
   useEffect(() => {
     loadProducts();
   }, []);
@@ -82,8 +84,14 @@ const Home = () => {
 
   const handleChangeCategoryType = (event)=>{
     const newCategories = { ...categories, [event.target.name]: event.target.checked }
-    var filter = filterObj(newCategories,category => category === true)
-    
+    var filtered = filterObj(newCategories,category => category === true)
+    const extracted = extractValue(filtered)
+    console.log('extractedextracted',extracted)
+    setproductsSearchData((prevState) => ({
+      ...prevState,
+      categories: extracted,
+    }));
+    // debugger
     setcategories({ ...categories, [event.target.name]: event.target.checked });
   }
   const handleSearchChange = (evt, name) => {
@@ -109,8 +117,11 @@ const Home = () => {
   if(debounceselectedStorageType !== ""){
     loadProducts(rangeValues?.[0],rangeValues?.[1],limit,debounceselectedStorageType)
   }
-  // if()
-  },[debouncedproductsRangeValues,debounceselectedStorageType,limit,rangeValues])
+  if(debouncedCategoryChecks !== ""){
+    const splitted = debouncedCategoryChecks.split(',')
+    loadProducts(rangeValues?.[0],rangeValues?.[1],limit,selectedStorage,splitted)
+  }
+  },[debouncedproductsRangeValues,debounceselectedStorageType,limit,rangeValues,selectedStorage,debouncedCategoryChecks])
 
   const handleInputChange = (e,name)=>{
     const {value} = e.target

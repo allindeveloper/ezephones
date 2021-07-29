@@ -10,23 +10,23 @@ const useStyles = makeStyles((theme) => ({
     color: constants.colors.white,
     height: "530px",
     marginBottom: "30px",
-    position:'relative'
+    position: "relative",
   },
   innerText: {
     alignContent: "left",
     textAlign: "left",
     padding: "25px",
-    position: 'relative',
+    position: "relative",
   },
   price: {
     fontSize: "24px",
   },
   actionButton: {
     textAlign: "center",
-    position: 'absolute',
-    bottom: '0px',
-    marginBottom:'20px',
-    left: '35%'
+    position: "absolute",
+    bottom: "0px",
+    marginBottom: "20px",
+    left: "35%",
   },
   grade: {
     border: `2px solid ${constants.colors.white}`,
@@ -74,7 +74,6 @@ const ProductItem = ({ product }) => {
             )}
             <SpaceTop length={30} />
             {/* {!product.lowestAsk && <SpaceTop length={60} />} */}
-            
           </div>
         </div>
         {product?.lowestAsk && (
@@ -84,12 +83,13 @@ const ProductItem = ({ product }) => {
         )}
       </div>
       <div className={productItemClasses.actionButton}>
-              <CustomButton caption="Buy"
-              style={{
-                width:'100px'
-              }}
-              />
-            </div>
+        <CustomButton
+          caption="Buy"
+          style={{
+            width: "100px",
+          }}
+        />
+      </div>
     </div>
   );
 };

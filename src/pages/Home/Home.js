@@ -52,11 +52,11 @@ const Home = () => {
     loadProducts();
   }, []);
 
-  const loadProducts = (minPrice=0,maxPrice=2500,limit=50,storageSize,otheryQuery) => {
+  const loadProducts = (minPrice=0,maxPrice=2500,limit=50,storageSize,splitted,otheryQuery) => {
       setloading(true)
     try {
       Axios.get(
-        formatRequestUrl(minPrice,maxPrice,limit,storageSize,otheryQuery)
+        formatRequestUrl(minPrice,maxPrice,limit,storageSize,splitted,otheryQuery)
       )
         .then(({ data }) => {
           console.log("data of all products", data?.data?.data);
@@ -82,7 +82,11 @@ const Home = () => {
   };
 
   const handleSearchClick = ()=>{
-      alert(productsSearchData.keywords)
+    let valuesString = productsSearchData.keywords
+    const splitted = valuesString?.split(',')
+    let found = splitted.find(val => val === 'GB');
+    // stringSearchLogic(splitted)
+    loadProducts(rangeValues?.[0],rangeValues?.[1],limit,selectedStorage,splitted,{})
   }
 
   const handleRangeChange = (values)=>{

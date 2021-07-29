@@ -2,15 +2,18 @@ import { Grid, makeStyles } from "@material-ui/core";
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
+import { useDebounce } from 'use-debounce';
 import appleshowcase from "../../assets/images/appleshowcase.png";
 import CustomButton from "../../components/CustomButton";
 import CustomInput from "../../components/CustomInput";
+import CustomLinearProgress from "../../components/CustomLinearProgress";
 import ProductItem from "../../components/ProductItem";
 import SpaceTop from "../../components/SpaceTop";
 import CategoriesSection from "../../components/ui/CategoriesSection";
 import Axios from "../../core/axios";
 import useCommonStyles from "../../core/commonStyles";
 import styles from "./home.module.css";
+
 const useStyles = makeStyles((theme) => ({
   mainHeader: {
     fontSize: "34pt",
@@ -36,24 +39,32 @@ const Home = () => {
   const homeClasses = useStyles();
   const [products, setProducts] = useState([]);
   const [rangeValues, setrangeValues] = React.useState([50, 5000]);
+  const [isLoading,setloading] = useState(false)
   const [productsSearchData, setproductsSearchData] = useState({
     keywords:''
   })
+  const [productsRangeValues] = useDebounce(rangeValues, 700);
   useEffect(() => {
     loadProducts();
   }, []);
 
-  const loadProducts = () => {
+  const loadProducts = (minPrice=0,maxPrice=2500,limit=50,otheryQuery) => {
+      setloading(true)
     try {
       Axios.get(
-        `sell-request/in-stock?sort=new&limit=50&page=1&minPrice=0&maxPrice=2500&storageSizeString=&conditionString=&category=Smartphones&brand=Apple,Samsung,Google,Huawei,LG,Motorola,OnePlus`
+        `sell-request/in-stock?sort=new&limit=50&page=1&minPrice=${minPrice}&maxPrice=${maxPrice}&storageSizeString=&conditionString=&category=Smartphones&brand=Apple,Samsung,Google,Huawei,LG,Motorola,OnePlus`
       )
         .then(({ data }) => {
           console.log("data of all products", data?.data?.data);
+          setloading(false)
           setProducts(data?.data?.data ?? []);
         })
-        .catch((error) => {});
-    } catch (error) {}
+        .catch((error) => {
+            setloading(false)
+        });
+    } catch (error) {
+        setloading(false)
+    }
   };
   const handleChangeStorageType = () => {};
 
@@ -68,8 +79,26 @@ const Home = () => {
       alert(productsSearchData.keywords)
   }
 
-  const handleRangeChange = (event, newValue)=>{
-    setrangeValues(newValue)
+  const handleRangeChange = (values)=>{
+    setrangeValues(values)
+  }
+  useEffect(()=>{
+    if(productsRangeValues?.[0]!== 50 || productsRangeValues?.[1] !== 5000){
+      loadProducts(productsRangeValues?.[0],productsRangeValues?.[1])
+  }
+  },[productsRangeValues])
+
+  const handleInputChange = (e,name)=>{
+    const {value} = e.target
+   const oldrangeValues = rangeValues
+   if(name === 'minPrice'){
+     let newrangeValues = [value,oldrangeValues?.[0]]
+     setrangeValues(newrangeValues)
+   }
+   if(name === 'maxPrice'){
+    let newrangeValues = [oldrangeValues?.[0],value]
+    setrangeValues(newrangeValues)
+  }
   }
   return (
     <div className={styles?.root}>
@@ -118,12 +147,18 @@ const Home = () => {
               handleChangeStorageType={handleChangeStorageType}
               handleRangeChange={handleRangeChange}
               rangeValues={rangeValues}
+              handleInputChange={handleInputChange}
             />
           </Grid>
          
           <Grid item xs={12} md={9} className={homeClasses.allproducts}>
             <Grid container spacing={3}>
-              {products &&
+                {isLoading &&
+                <Grid item xs={12} >
+                    <CustomLinearProgress />
+                    </Grid>
+                }
+              {products &&!isLoading && products.length>0&&
                 products?.map((product, i) => (
                   <Grid item xs={12} sm={3} md={3}>
                     <ProductItem key={i+product?._id} product={product} />

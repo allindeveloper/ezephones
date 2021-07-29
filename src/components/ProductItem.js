@@ -40,7 +40,7 @@ const ProductItem = ({ product }) => {
         <SpaceTop length={22} />
           <img
             width="100%"
-            src={product?.imgUrl ?? dummyphone}
+            src={product?.imgUrl === "" ? dummyphone : product?.imgUrl ?? dummyphone}
             alt={product?.name}
           />
           <div className={productItemClasses?.innerText}>

@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import clsx from "clsx";
-import React from "react";
+import React, { useRef } from "react";
 import useCommonStyles from "../../core/commonStyles";
 import { constants } from "../../core/utilities";
 import CustomInput from "../CustomInput";
@@ -17,10 +17,10 @@ const useStyles = makeStyles((theme) => ({
     top: "25px",
     position: "sticky",
   },
-  alignCenter:{
-      margin:'auto',
-      textAlign:'center'
-  }
+  alignCenter: {
+    margin: "auto",
+    textAlign: "center",
+  },
 }));
 
 const CategoriesSection = ({
@@ -28,12 +28,14 @@ const CategoriesSection = ({
   caption,
   rangeValues,
   handleRangeChange,
+  handleInputChange
 }) => {
   const commonStyles = useCommonStyles();
   const categoriesSectionClasses = useStyles();
+  const rangeRef = useRef()
   return (
     <div
-      className={clsx(categoriesSectionClasses.root,commonStyles.textWhite)}
+      className={clsx(categoriesSectionClasses.root, commonStyles.textWhite)}
     >
       <h4>{caption || "Categories"}</h4>
       <CategoryTypes data={constants.categories} />
@@ -46,28 +48,37 @@ const CategoriesSection = ({
         minRange={0}
         maxRange={5000}
       /> */}
-      <DualSlider 
-      rangeStep={10}
-      minRange={0}
-      maxRange={5000}
+      <DualSlider
+        rangeStep={10}
+        minRange={0}
+        maxRange={5000}
+        rangeValues={rangeValues}
+        onChange={handleRangeChange}
+        rangeRef={rangeRef}
       />
       <SpaceTop length={30} />
       <div className={categoriesSectionClasses.alignCenter}>
-      <CustomInput
-        //  handleChange={(e) => handleSearchChange(e,'keywords')}
-        // value={productsSearchData?.keywords}
-        width="35ch"
-        id="searchproducts"
-        placeholder="Min"
-      />
-      <SpaceTop length={20} />
-      <CustomInput
-        //  handleChange={(e) => handleSearchChange(e,'keywords')}
-        // value={productsSearchData?.keywords}
-        width="35ch"
-        id="searchproducts"
-        placeholder="Max"
-      />
+        <CustomInput
+          //  handleChange={(e) => handleSearchChange(e,'keywords')}
+          // value={productsSearchData?.keywords}
+          value={rangeValues?.[0]}
+          width="35ch"
+          handleChange={(e)=>handleInputChange(e,'minPrice')}
+          type={'number'}
+          id="searchproducts"
+          placeholder="Min"
+        />
+        <SpaceTop length={20} />
+        <CustomInput
+          //  handleChange={(e) => handleSearchChange(e,'keywords')}
+          // value={productsSearchData?.keywords}
+          value={rangeValues?.[1]}
+          handleChange={(e)=>handleInputChange(e,'maxPrice')}
+          width="35ch"
+          type={'number'}
+          id="searchproducts"
+          placeholder="Max"
+        />
       </div>
       <h4>Storage</h4>
       <StorageTypes

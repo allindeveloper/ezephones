@@ -5,7 +5,7 @@ import { getTrackBackground, Range, useThumbOverlap } from "react-range";
 const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
-const COLORS = ["#0C2960", "#276EF1", "#9CBCF8", "#ccc"];
+const COLORS = ["#FFF", "#e0e0e0", "#e0e0e0", "#e0e0e0"];
 const THUMB_SIZE = 42;
 
 function ThumbLabel({ rangeRef, values, index }) {
@@ -30,7 +30,7 @@ function ThumbLabel({ rangeRef, values, index }) {
         fontFamily: "Arial,Helvetica Neue,Helvetica,sans-serif",
         padding: "4px",
         borderRadius: "4px",
-        backgroundColor: "#548BF4",
+        backgroundColor: "transparent",
         whiteSpace: "nowrap",
         ...labelStyle,
       }}
@@ -40,9 +40,9 @@ function ThumbLabel({ rangeRef, values, index }) {
   );
 }
 
-const DualSlider = ({ rtl, step,minRange, maxRange}) => {
-  const [values, setValues] = React.useState([25, 75]);
-  const rangeRef = React.useRef();
+const DualSlider = ({ rtl, step,minRange, maxRange,rangeValues,rangeRef,onChange}) => {
+//   const [values, setValues] = React.useState([25, 75]);
+//   const rangeRef = React.useRef();
   const Thumb = ({ props, index, isDragged }) => (
     <div
       {...props}
@@ -55,10 +55,10 @@ const DualSlider = ({ rtl, step,minRange, maxRange}) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        boxShadow: "0px 2px 6px #AAA",
+        // boxShadow: "0px 2px 6px #AAA",
       }}
     >
-      <ThumbLabel rangeRef={rangeRef.current} values={values} index={index} />
+      <ThumbLabel rangeRef={rangeRef.current} values={rangeValues} index={index} />
       <div
         style={{
           height: "16px",
@@ -86,7 +86,7 @@ const DualSlider = ({ rtl, step,minRange, maxRange}) => {
           width: "100%",
           borderRadius: "4px",
           background: getTrackBackground({
-            values: values,
+            values: rangeValues,
             colors: COLORS,
             min: MIN,
             max: MAX,
@@ -102,8 +102,9 @@ const DualSlider = ({ rtl, step,minRange, maxRange}) => {
   return (
     <Range
       ref={rangeRef}
-      values={values}
-      onChange={(values) => setValues(values)}
+      values={rangeValues}
+    //   onChange={(values) => setValues(values)}
+        onChange={onChange}
       renderThumb={Thumb}
       renderTrack={Track}
       step={step || STEP}

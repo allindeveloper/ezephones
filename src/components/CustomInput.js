@@ -36,6 +36,7 @@ const CustomInput = ({
   inputProps,
   placeholder,
   width,
+  type,
   className
 }) => {
   return (
@@ -45,6 +46,7 @@ const CustomInput = ({
         label={label}
         onChange={handleChange}
         variant={variant}
+        type={type}
         style={{
           width:width
         }}

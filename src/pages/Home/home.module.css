@@ -3,3 +3,19 @@
     margin-left:40px;
     margin-right: 40px;
 }
+
+.d_flex{
+    display: flex;
+}
+.justify_content_space_between{
+    justify-content: space-between;
+}
+.justify_content_space_around{
+    justify-content: space-around;
+}
+.flex_wrap{
+    flex-wrap: wrap;
+}
+.d_inline_flex{
+    display: inline-flex;
+}

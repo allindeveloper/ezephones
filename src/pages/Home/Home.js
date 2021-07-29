@@ -1,8 +1,12 @@
 import { Grid, makeStyles } from "@material-ui/core";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import appleshowcase from "../../assets/images/appleshowcase.png";
+import CustomButton from "../../components/CustomButton";
+import CustomInput from "../../components/CustomInput";
 import ProductItem from "../../components/ProductItem";
+import SpaceTop from "../../components/SpaceTop";
 import CategoriesSection from "../../components/ui/CategoriesSection";
 import Axios from "../../core/axios";
 import useCommonStyles from "../../core/commonStyles";
@@ -11,21 +15,29 @@ const useStyles = makeStyles((theme) => ({
   mainHeader: {
     fontSize: "34pt",
   },
+  bottomContainer:{
+    justifyContent:'space-between'
+  },
   leftDiv: {},
   rightDiv: {},
   topContainer: {
     marginTop: "30px",
   },
-  allproducts:{
-      marginLeft:'40px'
-  }
+  allproducts: {
+    // marginLeft: "40px",
+    [theme.breakpoints.down("lg")]: {
+      marginLeft: 0,
+    },
+  },
 }));
 
 const Home = () => {
   const commonStyles = useCommonStyles();
   const homeClasses = useStyles();
   const [products, setProducts] = useState([]);
-
+  const [productsSearchData, setproductsSearchData] = useState({
+    keywords:''
+  })
   useEffect(() => {
     loadProducts();
   }, []);
@@ -43,6 +55,17 @@ const Home = () => {
     } catch (error) {}
   };
   const handleChangeStorageType = () => {};
+
+  const handleSearchChange = (evt, name) => {
+    setproductsSearchData((prevState) => ({
+      ...prevState,
+      [name]: evt.target.value,
+    }));
+  };
+
+  const handleSearchClick = ()=>{
+      alert(productsSearchData.keywords)
+  }
   return (
     <div className={styles?.root}>
       <div>
@@ -56,6 +79,24 @@ const Home = () => {
                 AVAILABLE STOCK HERE
               </h1>
             </div>
+            <div className={styles.d_inline_flex}>
+                <div>
+                <CustomInput 
+                handleChange={(e) => handleSearchChange(e,'keywords')}
+                value={productsSearchData?.keywords}
+                id="searchproducts"
+                placeholder="Enter Search Term (e.g IPhone x, 128GB or A1)"
+                />
+                </div>
+               <div>
+                   <CustomButton 
+                   width="200px"
+                   onClick={handleSearchClick}
+                    style={{padding:'16px',marginLeft:'20px'}}
+                    endIcon={<ArrowForwardIcon/>}
+                   caption="Search"/>
+               </div>
+            </div>
           </Grid>
           <Grid item xs={12} md={4}>
             <div>
@@ -63,19 +104,20 @@ const Home = () => {
             </div>
           </Grid>
         </Grid>
-        <Grid container>
+        <SpaceTop length={90}/>
+        <Grid container spacing={4} className={homeClasses.bottomContainer}>
           <Grid item xs={12} md={3}>
             <CategoriesSection
               caption="Categories"
               handleChangeStorageType={handleChangeStorageType}
             />
           </Grid>
-          <Grid item xs={12} md={7} className={homeClasses.allproducts}>
+          <Grid item xs={12} md={9} className={homeClasses.allproducts}>
             <Grid container spacing={3}>
               {products &&
                 products?.map((product, i) => (
-                  <Grid item xs={6} sm={3}>
-                    <ProductItem key={i} product={product} />
+                  <Grid item xs={12} sm={3} md={3}>
+                    <ProductItem key={i+product?._id} product={product} />
                   </Grid>
                 ))}
             </Grid>

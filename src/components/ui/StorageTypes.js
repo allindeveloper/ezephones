@@ -1,28 +1,10 @@
-import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import { constants } from "../../core/utilities";
 
-const GreenCheckbox = withStyles({
-  //   root: {
-  //     color: green[400],
-  //     '&$checked': {
-  //       color: green[600],
-  //     },
-  //   },
-  root: {
-    color: constants.colors.white,
-    "&$checked": {
-      color: constants.colors.white,
-    },
-  },
-  checked: {
-    //   backgroundColor:'blue'
-  },
-})((props) => <Checkbox color="default" {...props} />);
 const useStyles = makeStyles((theme) => ({
   root: {
     listStyle: "none",
@@ -43,7 +25,7 @@ const StorageTypes = ({ data, handleChange }) => {
             <FormControlLabel
               value={value}
               key={index}
-              control={<Radio />}
+              control={<Radio size={'medium'} style={{color:constants.colors.white}}/>}
               label={value}
             />
           ))}

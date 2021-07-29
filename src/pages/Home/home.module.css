@@ -7,6 +7,11 @@
 .d_flex{
     display: flex;
 }
+.align_center{
+    text-align: center;
+    justify-content: center;
+    margin: auto;
+}
 .justify_content_space_between{
     justify-content: space-between;
 }

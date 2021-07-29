@@ -13,7 +13,7 @@ const CustomTextField = withStyles({
       },
       '& .MuiOutlinedInput-root': {
         color:constants.colors.white,
-        width:'45ch',
+        
         '& fieldset': {
           borderColor: constants.colors.white,
         color:constants.colors.white,
@@ -34,14 +34,21 @@ const CustomInput = ({
   value,
   handleChange,
   inputProps,
-  placeholder
+  placeholder,
+  width,
+  className
 }) => {
   return (
       <CustomTextField
         id={id}
         value={value}
+        label={label}
         onChange={handleChange}
         variant={variant}
+        style={{
+          width:width
+        }}
+        className={className}
         placeholder={placeholder}
         {...inputProps}
       />

@@ -35,6 +35,7 @@ const Home = () => {
   const commonStyles = useCommonStyles();
   const homeClasses = useStyles();
   const [products, setProducts] = useState([]);
+  const [rangeValues, setrangeValues] = React.useState([50, 5000]);
   const [productsSearchData, setproductsSearchData] = useState({
     keywords:''
   })
@@ -66,6 +67,10 @@ const Home = () => {
   const handleSearchClick = ()=>{
       alert(productsSearchData.keywords)
   }
+
+  const handleRangeChange = (event, newValue)=>{
+    setrangeValues(newValue)
+  }
   return (
     <div className={styles?.root}>
       <div>
@@ -79,12 +84,13 @@ const Home = () => {
                 AVAILABLE STOCK HERE
               </h1>
             </div>
-            <div className={styles.d_inline_flex}>
+            <div className={clsx(styles.d_inline_flex,styles.flex_wrap)}>
                 <div>
                 <CustomInput 
                 handleChange={(e) => handleSearchChange(e,'keywords')}
                 value={productsSearchData?.keywords}
                 id="searchproducts"
+                width="45ch"
                 placeholder="Enter Search Term (e.g IPhone x, 128GB or A1)"
                 />
                 </div>
@@ -110,8 +116,11 @@ const Home = () => {
             <CategoriesSection
               caption="Categories"
               handleChangeStorageType={handleChangeStorageType}
+              handleRangeChange={handleRangeChange}
+              rangeValues={rangeValues}
             />
           </Grid>
+         
           <Grid item xs={12} md={9} className={homeClasses.allproducts}>
             <Grid container spacing={3}>
               {products &&

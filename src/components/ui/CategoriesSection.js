@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: constants.colors.categoriesBg,
     height: "600px",
-    width: "25%",
+    // width: "25%",
     padding: "1rem",
   },
 }));

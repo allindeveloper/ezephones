@@ -9,3 +9,9 @@ export const constants = {
     categories:['All','IPhone','Samsung','IPad','MacBook','AirPods','Tecno'],
     storageTypes:['32GB','64GB','128GB','256GB']
 }
+
+export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,otheryQuery)=>{
+    return `sell-request/in-stock?sort=new&limit=50&page=1
+    &minPrice=${minPrice}&maxPrice=${maxPrice}&storageSizeString=${storageSize}
+    &conditionString=&category=Smartphones&brand=Apple,Samsung,Google,Huawei,LG,Motorola,OnePlus`
+}

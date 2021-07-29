@@ -12,6 +12,7 @@ import SpaceTop from "../../components/SpaceTop";
 import CategoriesSection from "../../components/ui/CategoriesSection";
 import Axios from "../../core/axios";
 import useCommonStyles from "../../core/commonStyles";
+import { formatRequestUrl } from "../../core/utilities";
 import styles from "./home.module.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,16 +44,19 @@ const Home = () => {
   const [productsSearchData, setproductsSearchData] = useState({
     keywords:''
   })
-  const [productsRangeValues] = useDebounce(rangeValues, 700);
+  const [limit,setlimit ] = useState(50)
+  const [selectedStorage, setselectedStorage] = useState('');
+  const [debouncedproductsRangeValues] = useDebounce(rangeValues, 700);
+  const [debounceselectedStorageType] = useDebounce(selectedStorage,700);
   useEffect(() => {
     loadProducts();
   }, []);
 
-  const loadProducts = (minPrice=0,maxPrice=2500,limit=50,otheryQuery) => {
+  const loadProducts = (minPrice=0,maxPrice=2500,limit=50,storageSize,otheryQuery) => {
       setloading(true)
     try {
       Axios.get(
-        `sell-request/in-stock?sort=new&limit=50&page=1&minPrice=${minPrice}&maxPrice=${maxPrice}&storageSizeString=&conditionString=&category=Smartphones&brand=Apple,Samsung,Google,Huawei,LG,Motorola,OnePlus`
+        formatRequestUrl(minPrice,maxPrice,limit,storageSize,otheryQuery)
       )
         .then(({ data }) => {
           console.log("data of all products", data?.data?.data);
@@ -66,7 +70,9 @@ const Home = () => {
         setloading(false)
     }
   };
-  const handleChangeStorageType = () => {};
+  const handleChangeStorageType = (event) => {
+    setselectedStorage(event.target.value);
+  };
 
   const handleSearchChange = (evt, name) => {
     setproductsSearchData((prevState) => ({
@@ -83,10 +89,13 @@ const Home = () => {
     setrangeValues(values)
   }
   useEffect(()=>{
-    if(productsRangeValues?.[0]!== 50 || productsRangeValues?.[1] !== 5000){
-      loadProducts(productsRangeValues?.[0],productsRangeValues?.[1])
+    if(debouncedproductsRangeValues?.[0]!== 50 || debouncedproductsRangeValues?.[1] !== 5000){
+      loadProducts(debouncedproductsRangeValues?.[0],debouncedproductsRangeValues?.[1])
   }
-  },[productsRangeValues])
+  if(debounceselectedStorageType !== ""){
+    loadProducts(rangeValues?.[0],rangeValues?.[1],limit,debounceselectedStorageType)
+  }
+  },[debouncedproductsRangeValues,debounceselectedStorageType,limit,rangeValues])
 
   const handleInputChange = (e,name)=>{
     const {value} = e.target

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     listStyle: "none",
   },
 }));
-const StorageTypes = ({ data, handleChange }) => {
+const StorageTypes = ({ data,value, handleChange }) => {
   const storageTypesClasses = useStyles();
 
   return (
@@ -20,6 +20,7 @@ const StorageTypes = ({ data, handleChange }) => {
           aria-label={"storage-types"}
           name="storage-types"
           onChange={handleChange}
+          value={value}
         >
           {data?.map((value, index) => (
             <FormControlLabel

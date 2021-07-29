@@ -7,6 +7,15 @@ export const constants = {
         'primaryBlue':'#2D7EE5'
     },
     categories:['All','IPhone','Samsung','IPad','MacBook','AirPods','Tecno'],
+    objCategorues:{
+        All:false,
+        IPhone:false,
+        Samsung:false,
+        IPad:false,
+        MacBook:false,
+        AirPods:false,
+        Tecno:false
+    },
     storageTypes:['32GB','64GB','128GB','256GB']
 }
 

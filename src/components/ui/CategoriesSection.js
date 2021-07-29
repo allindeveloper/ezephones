@@ -29,7 +29,9 @@ const CategoriesSection = ({
   rangeValues,
   handleRangeChange,
   handleInputChange,
-  selectedStorage
+  selectedStorage,
+  handleChangeCategoryType,
+  categories
 }) => {
   const commonStyles = useCommonStyles();
   const categoriesSectionClasses = useStyles();
@@ -41,7 +43,10 @@ const CategoriesSection = ({
       className={clsx(categoriesSectionClasses.root, commonStyles.textWhite)}
     >
       <h4>{caption || "Categories"}</h4>
-      <CategoryTypes data={constants.categories} />
+      <CategoryTypes 
+      handleChange={handleChangeCategoryType}
+      categories={categories}
+      data={constants.categories} />
       <h4>{"Price Filter"}</h4>
       <SpaceTop length={50} />
       <DualSlider
@@ -56,7 +61,7 @@ const CategoriesSection = ({
       <div className={categoriesSectionClasses.alignCenter}>
         <CustomInput
           value={rangeValues?.[0]}
-          width={matches && '35ch'}
+          width={matches && '100%'}
           handleChange={(e)=>handleInputChange(e,'minPrice')}
           type={'number'}
           id="searchproducts"
@@ -66,7 +71,7 @@ const CategoriesSection = ({
         <CustomInput
           value={rangeValues?.[1]}
           handleChange={(e)=>handleInputChange(e,'maxPrice')}
-          width={matches && '35ch'}
+          width={matches && '100%'}
           type={'number'}
           id="searchproducts"
           placeholder="Max"

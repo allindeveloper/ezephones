@@ -13,7 +13,7 @@ import SpaceTop from "../../components/SpaceTop";
 import CategoriesSection from "../../components/ui/CategoriesSection";
 import Axios from "../../core/axios";
 import useCommonStyles from "../../core/commonStyles";
-import { formatRequestUrl } from "../../core/utilities";
+import { constants, formatRequestUrl } from "../../core/utilities";
 import styles from "./home.module.css";
 const useStyles = makeStyles((theme) => ({
   mainHeader: {
@@ -50,6 +50,7 @@ const Home = () => {
   const [productsSearchData, setproductsSearchData] = useState({
     keywords:''
   })
+  const [categories, setcategories] = useState(constants.objCategorues)
   const [limit,setlimit ] = useState(50)
   const [selectedStorage, setselectedStorage] = useState('');
   const [debouncedproductsRangeValues] = useDebounce(rangeValues, 700);
@@ -79,6 +80,9 @@ const Home = () => {
     setselectedStorage(event.target.value);
   };
 
+  const handleChangeCategoryType = (event)=>{
+    setcategories({ ...categories, [event.target.name]: event.target.checked });
+  }
   const handleSearchChange = (evt, name) => {
     setproductsSearchData((prevState) => ({
       ...prevState,
@@ -89,8 +93,6 @@ const Home = () => {
   const handleSearchClick = ()=>{
     let valuesString = productsSearchData.keywords
     const splitted = valuesString?.split(',')
-    let found = splitted.find(val => val === 'GB');
-    // stringSearchLogic(splitted)
     loadProducts(rangeValues?.[0],rangeValues?.[1],limit,selectedStorage,splitted,{})
   }
 
@@ -166,6 +168,8 @@ const Home = () => {
               handleRangeChange={handleRangeChange}
               rangeValues={rangeValues}
               handleInputChange={handleInputChange}
+              categories={categories}
+              handleChangeCategoryType={handleChangeCategoryType}
             />
           </Grid>
          

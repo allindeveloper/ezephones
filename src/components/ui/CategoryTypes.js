@@ -1,5 +1,6 @@
 import { Checkbox, FormControlLabel, FormGroup, makeStyles } from "@material-ui/core";
 import React from "react";
+import { constants } from "../../core/utilities";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -13,21 +14,25 @@ const useStyles = makeStyles((theme) => ({
 const CategoryTypes = ({ data ,handleChange,categories}) => {
     const categoryTypesClasses  = useStyles()
   return (
-    <ul className={categoryTypesClasses.root}>
-          <li  className={categoryTypesClasses.categorytItem}>
+    <div className={categoryTypesClasses.root}>
+          <div  className={categoryTypesClasses.categorytItem}>
      <FormGroup>
           
       {data?.map((category, index) => (
         <FormControlLabel
         key={`${category}-${index}`}
-        control={<Checkbox  checked={categories?.[category]} onChange={handleChange} name={category} />}
+        control={<Checkbox  
+        style ={{
+          color: constants.colors.white
+        }}
+        checked={categories?.[category]} onChange={handleChange} name={category} />}
         label={category}
       />
       ))}
       </FormGroup>
-      </li>
+      </div>
       
-    </ul>
+    </div>
   );
 };
 export default CategoryTypes;

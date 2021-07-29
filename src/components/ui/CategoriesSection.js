@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     textAlign: "center",
   },
+  slider:{
+      marginLeft:'15px',
+      marginRight:'15px'
+  }
 }));
 
 const CategoriesSection = ({
@@ -49,7 +53,8 @@ const CategoriesSection = ({
       data={constants.categories} />
       <h4>{"Price Filter"}</h4>
       <SpaceTop length={50} />
-      <DualSlider
+      
+      <div className={categoriesSectionClasses.slider}><DualSlider
         rangeStep={10}
         minRange={0}
         maxRange={5000}
@@ -57,6 +62,7 @@ const CategoriesSection = ({
         onChange={handleRangeChange}
         rangeRef={rangeRef}
       />
+      </div>
       <SpaceTop length={30} />
       <div className={categoriesSectionClasses.alignCenter}>
         <CustomInput

@@ -73,7 +73,6 @@ const ProductItem = ({ product }) => {
               </>
             )}
             <SpaceTop length={30} />
-            {/* {!product.lowestAsk && <SpaceTop length={60} />} */}
           </div>
         </div>
         {product?.lowestAsk && (

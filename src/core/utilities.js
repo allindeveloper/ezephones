@@ -19,7 +19,7 @@ export const constants = {
     storageTypes:['32GB','64GB','128GB','256GB']
 }
 
-export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,splitted,sort,page,otheryQuery)=>{
+export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,brands,splitted,sort,page,otheryQuery)=>{
     let query = `sell-request/in-stock?`
     
     if(sort){
@@ -37,6 +37,9 @@ export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,splitted,s
     // debugger
     if(storageSize){
         query += `&storageSizeString=${storageSize}`
+    }
+    if(brands){
+        query += `&brands=${brands}`
     }
     
     //logic for input search with comma separated values

@@ -89,16 +89,13 @@ export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,brands,spl
             }
             final.push(result3)
         }
-        // result4 = checkThrough(value,i,'')
+    
     }
-    // debugger
     console.log('allresults',result1, result2, result3)
     console.log('result4',final)
     console.log('euqrrryyy',query)
     
-    // const categoryOccurrence = (query.match(/category/g) || []).length;
-    // const finalQuery = 
-   
+    
     return query
 }
 const gradeRule = (value,name)=>{

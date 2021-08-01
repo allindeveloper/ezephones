@@ -14,6 +14,7 @@
 - This application was developed using React, JavaScript(ES6) as well as the React Bootstrap UI library.
 
 ### Principles
-    1.Common Abstraction/Composition -  Created several ui components in `components` directory and reusable components in `components/ui` directory 
+
+1. Common Abstraction/Composition -  Created several ui components in `components` directory and reusable components in `components/ui` directory 
     
 

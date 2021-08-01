@@ -2,6 +2,7 @@ import { Grid, makeStyles, useMediaQuery } from "@material-ui/core";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
+import InfiniteScroller from "react-infinite-scroller";
 import { useDebounce } from "use-debounce";
 import appleshowcase from "../../assets/images/appleshowcase.png";
 import sadface from "../../assets/images/sadface.svg";
@@ -20,6 +21,8 @@ import {
   formatRequestUrl
 } from "../../core/utilities";
 import styles from "./home.module.css";
+
+
 const useStyles = makeStyles((theme) => ({
   mainHeader: {
     fontSize: "34pt",
@@ -48,6 +51,7 @@ const Home = () => {
   const commonStyles = useCommonStyles();
   const homeClasses = useStyles();
   const matches = useMediaQuery("(min-width:600px)");
+  const [mount, setMount] = useState(false);
 
   const [products, setProducts] = useState([]);
   const [rangeValues, setrangeValues] = React.useState([50, 5000]);
@@ -62,12 +66,16 @@ const Home = () => {
   const [debouncedproductsRangeValues] = useDebounce(rangeValues, 700);
   const [debounceselectedStorageType] = useDebounce(selectedStorage, 700);
   const loader = useRef(null);
+  const [hasNextPage, sethasNextPage] = useState(false);
   const [debouncedCategoryChecks] = useDebounce(
     productsSearchData.categories,
     700
   );
   useEffect(() => {
-    loadProducts();
+    if (!mount) {
+      setMount(true);
+      loadProducts();
+    }
   }, []);
 
   const loadProducts = (
@@ -75,7 +83,7 @@ const Home = () => {
     maxPrice = 2500,
     limit = 50,
     storageSize,
-    brands='Apple',
+    brands = "Apple",
     splitted,
     otheryQuery
   ) => {
@@ -94,7 +102,13 @@ const Home = () => {
       )
         .then(({ data }) => {
           setloading(false);
-          setProducts(products.concat(data?.data?.data ?? []));
+          if (data.data?.data.length > 0) {
+            sethasNextPage(true);
+            setProducts(products.concat(data?.data?.data ?? []));
+          } else {
+            setProducts([]);
+            sethasNextPage(false)
+          }
         })
         .catch((error) => {
           setloading(false);
@@ -178,8 +192,10 @@ const Home = () => {
         debouncedproductsRangeValues?.[0],
         debouncedproductsRangeValues?.[1]
       );
-      return;
     }
+  }, [debouncedproductsRangeValues]);
+
+  useEffect(() => {
     if (debounceselectedStorageType !== "") {
       loadProducts(
         rangeValues?.[0],
@@ -187,8 +203,10 @@ const Home = () => {
         limit,
         debounceselectedStorageType
       );
-      return;
     }
+  }, [debounceselectedStorageType]);
+
+  useEffect(() => {
     if (debouncedCategoryChecks !== "") {
       const brands = debouncedCategoryChecks.split(",");
       loadProducts(
@@ -198,16 +216,44 @@ const Home = () => {
         selectedStorage,
         brands
       );
-      return;
     }
-  }, [
-    debouncedproductsRangeValues,
-    debounceselectedStorageType,
-    limit,
-    rangeValues,
-    selectedStorage,
-    debouncedCategoryChecks
-  ]);
+  }, [debouncedCategoryChecks]);
+  // useEffect(() => {
+  //   if (
+  //     debouncedproductsRangeValues?.[0] !== 50 ||
+  //     debouncedproductsRangeValues?.[1] !== 5000
+  //   ) {
+  //     loadProducts(
+  //       debouncedproductsRangeValues?.[0],
+  //       debouncedproductsRangeValues?.[1]
+  //     );
+  //   }
+  //   if (debounceselectedStorageType !== "") {
+  //     loadProducts(
+  //       rangeValues?.[0],
+  //       rangeValues?.[1],
+  //       limit,
+  //       debounceselectedStorageType
+  //     );
+  //   }
+  //   if (debouncedCategoryChecks !== "") {
+  //     const brands = debouncedCategoryChecks.split(",");
+  //     loadProducts(
+  //       rangeValues?.[0],
+  //       rangeValues?.[1],
+  //       limit,
+  //       selectedStorage,
+  //       brands
+  //     );
+  //   }
+  // }, [
+  //   debouncedproductsRangeValues,
+  //   debounceselectedStorageType,
+  //   limit,
+  //   rangeValues,
+  //   selectedStorage,
+  //   debouncedCategoryChecks
+  // ]);
 
   const handleInputChange = (e, name) => {
     const { value } = e.target;
@@ -222,34 +268,17 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    var options = {
-      root: null,
-      rootMargin: "20px",
-      threshold: 1.0,
-    };
-    // initialize IntersectionObserver
-    // and attaching to Load More div
-    const observer = new IntersectionObserver(handleObserver, options);
-    if (loader.current) {
-      observer.observe(loader.current);
-    }
-  }, []);
+  function handleLoadMore() {
+    setloading(true);
+    setlimit(limit + 20);
+    loadProducts(
+      rangeValues?.[0],
+      rangeValues?.[1],
+      limit + 20,
+      selectedStorage
+    );
+  }
 
-  // here we handle what happens when user scrolls to Load More div
-  // in this case we just update page variable
-  const handleObserver = (entities) => {
-    const target = entities[0];
-    if (target.isIntersecting) {
-      setlimit(limit + 20);
-      loadProducts(
-        rangeValues?.[0],
-        rangeValues?.[1],
-        limit + 20,
-        selectedStorage
-      );
-    }
-  };
   return (
     <div className={styles?.root}>
       <div>
@@ -305,12 +334,48 @@ const Home = () => {
           </Grid>
 
           <Grid item xs={12} md={9} className={homeClasses.allproducts}>
-            <Grid container spacing={3}>
-              {/* {isLoading && (
-                <Grid item xs={12} ref={loader}>
-                  <CustomLinearProgress />
+            <InfiniteScroller
+              initialLoad={false}
+              threshold={400}
+              loader={
+                isLoading && (
+                  <Grid item xs={12} className={styles.align_center}>
+                    <div>
+                      <CustomCircularProgress />
+                    </div>
+                  </Grid>
+                )
+              }
+              className="infinite-scroll"
+              hasMore={hasNextPage && !isLoading}
+              loadMore={handleLoadMore}
+            >
+              <Grid container spacing={3}>
+                {!isLoading && products.length === 0 && (
+                  <Grid item xs={12} className={homeClasses.emptyProducts}>
+                    <img src={sadface} alt="No Products" width="20%" />
+                    <h5>No Products.</h5>
+                  </Grid>
+                )}
+                {products &&
+                  !isLoading &&
+                  products.length > 0 &&
+                  products?.map((product, i) => (
+                    <Grid item xs={12} sm={3} md={3}>
+                      <ProductItem key={i + product?._id} product={product} />
+                    </Grid>
+                  ))}
+              </Grid>
+              {isLoading && (
+                <Grid item xs={12} className={styles.align_center}>
+                  <div>
+                    <CustomCircularProgress />
+                  </div>
                 </Grid>
-              )} */}
+              )}
+            </InfiniteScroller>
+
+            {/* <Grid container spacing={3} >
               {!isLoading && products.length === 0 && (
                 <Grid item xs={12} className={homeClasses.emptyProducts}>
                   <img src={sadface} alt="No Products" width="20%" />
@@ -325,13 +390,15 @@ const Home = () => {
                     <ProductItem key={i + product?._id} product={product} />
                   </Grid>
                 ))}
-                {isLoading && <Grid item xs={12} className={styles.align_center} ref={loader}>
-                  <div className="loading" >
-                <CustomCircularProgress />
-              </div> 
-                 </Grid>}
-              
-            </Grid>
+
+              {(isLoading) &&
+                <Grid item xs={12} className={styles.align_center}>
+                  <div>
+                    <CustomCircularProgress />
+                  </div>
+                </Grid>
+              }
+            </Grid> */}
           </Grid>
         </Grid>
       </div>

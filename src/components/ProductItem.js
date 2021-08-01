@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { Fade, makeStyles } from "@material-ui/core";
 import dummyphone from "../assets/images/dummyphone.png";
 import { constants } from "../core/utilities";
 import CustomButton from "./CustomButton";
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 const ProductItem = ({ product,key }) => {
   const productItemClasses = useStyles();
   return (
+    <Fade in>
     <div className={productItemClasses?.root}>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         <div>
@@ -88,6 +89,7 @@ const ProductItem = ({ product,key }) => {
         />
       </div>
     </div>
+    </Fade>
   );
 };
 export default ProductItem;

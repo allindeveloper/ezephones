@@ -47,7 +47,7 @@ export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,brands,spl
     let result3
     let final = []
     for(let i in splitted){
-        const value = splitted[i]
+        const value = splitted[i] // each value
         result1 = gradeRule(value,'grade')
         if(result1 !== false){
             if(result1?.name === 'grade'){

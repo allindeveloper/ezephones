@@ -9,6 +9,7 @@ import sadface from "../../assets/images/sadface.svg";
 import CustomButton from "../../components/CustomButton";
 import CustomCircularProgress from "../../components/CustomCircularProgress";
 import CustomInput from "../../components/CustomInput";
+import CustomLinearProgress from '../../components/CustomLinearProgress';
 import CustomTilt from "../../components/CustomTilt";
 import ProductItem from "../../components/ProductItem";
 import SpaceTop from "../../components/SpaceTop";
@@ -22,6 +23,7 @@ import {
   formatRequestUrl
 } from "../../core/utilities";
 import styles from "./home.module.css";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -176,6 +178,7 @@ const Home = () => {
 
   const handleSearchClick = () => {
     let valuesString = productsSearchData.keywords;
+    if(valuesString){
     const splitted = valuesString?.split(",");
     loadProducts(
       rangeValues?.[0],
@@ -186,6 +189,7 @@ const Home = () => {
       splitted,
       {}
     );
+    }
   };
 
   const handleRangeChange = (values) => {
@@ -352,6 +356,7 @@ const Home = () => {
           </Grid>
 
           <Grid item xs={12} md={9} className={homeClasses.allproducts}>
+            {isLoading && !scrolled &&<CustomLinearProgress />}
             <InfiniteScroller
               initialLoad={false}
               threshold={400}
@@ -379,11 +384,11 @@ const Home = () => {
                   products.length > 0 &&
                   products?.map((product, i) => (
                     <Grid item xs={12} sm={3} md={3} key={i}>
-                      <ProductItem  product={product} />
+                        <ProductItem  product={product} />
                     </Grid>
                   ))}
               </Grid>
-              {isLoading && (
+              {isLoading && scrolled && (
                 <Grid item xs={12} className={styles.align_center}>
                   <div>
                     <CustomCircularProgress />

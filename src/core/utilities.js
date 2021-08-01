@@ -114,6 +114,7 @@ const nameCategoryRule = (value,name)=>{
 export const filterObj = (obj,predicate)=>{
    return Object.keys(obj)
           .filter( key => predicate(obj[key]) )
+          // eslint-disable-next-line no-sequences
           .reduce( (res, key) => (res[key] = obj[key], res), {} );
 }
 

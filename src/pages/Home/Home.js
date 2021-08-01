@@ -1,7 +1,7 @@
 import { Grid, Hidden, makeStyles, useMediaQuery } from "@material-ui/core";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import clsx from "clsx";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import InfiniteScroller from "react-infinite-scroller";
 import { useDebounce } from "use-debounce";
 import appleshowcase from "../../assets/images/appleshowcase.png";
@@ -70,7 +70,6 @@ const Home = () => {
   const [selectedStorage, setselectedStorage] = useState("");
   const [debouncedproductsRangeValues] = useDebounce(rangeValues, 700);
   const [debounceselectedStorageType] = useDebounce(selectedStorage, 700);
-  const loader = useRef(null);
   const [hasNextPage, sethasNextPage] = useState(false);
   const [debouncedCategoryChecks] = useDebounce(
     productsSearchData.categories,

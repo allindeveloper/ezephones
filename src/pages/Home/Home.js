@@ -230,43 +230,7 @@ const Home = () => {
       );
     }
   }, [debouncedCategoryChecks]);
-  // useEffect(() => {
-  //   if (
-  //     debouncedproductsRangeValues?.[0] !== 50 ||
-  //     debouncedproductsRangeValues?.[1] !== 5000
-  //   ) {
-  //     loadProducts(
-  //       debouncedproductsRangeValues?.[0],
-  //       debouncedproductsRangeValues?.[1]
-  //     );
-  //   }
-  //   if (debounceselectedStorageType !== "") {
-  //     loadProducts(
-  //       rangeValues?.[0],
-  //       rangeValues?.[1],
-  //       limit,
-  //       debounceselectedStorageType
-  //     );
-  //   }
-  //   if (debouncedCategoryChecks !== "") {
-  //     const brands = debouncedCategoryChecks.split(",");
-  //     loadProducts(
-  //       rangeValues?.[0],
-  //       rangeValues?.[1],
-  //       limit,
-  //       selectedStorage,
-  //       brands
-  //     );
-  //   }
-  // }, [
-  //   debouncedproductsRangeValues,
-  //   debounceselectedStorageType,
-  //   limit,
-  //   rangeValues,
-  //   selectedStorage,
-  //   debouncedCategoryChecks
-  // ]);
-
+  
   const handleInputChange = (e, name) => {
     const { value } = e.target;
     const oldrangeValues = rangeValues;

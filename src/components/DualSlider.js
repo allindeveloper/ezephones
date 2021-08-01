@@ -1,6 +1,5 @@
 import * as React from "react";
 import { getTrackBackground, Range, useThumbOverlap } from "react-range";
-// import { useThumbOverlap } from '../src/utils';
 
 const STEP = 0.1;
 const MIN = 0;
@@ -103,7 +102,6 @@ const DualSlider = ({ rtl, step,minRange, maxRange,rangeValues,rangeRef,onChange
     <Range
       ref={rangeRef}
       values={rangeValues}
-    //   onChange={(values) => setValues(values)}
         onChange={onChange}
       renderThumb={Thumb}
       renderTrack={Track}

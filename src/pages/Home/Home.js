@@ -1,4 +1,4 @@
-import { Grid, makeStyles, useMediaQuery } from "@material-ui/core";
+import { Grid, Hidden, makeStyles, useMediaQuery } from "@material-ui/core";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
@@ -9,6 +9,7 @@ import sadface from "../../assets/images/sadface.svg";
 import CustomButton from "../../components/CustomButton";
 import CustomCircularProgress from "../../components/CustomCircularProgress";
 import CustomInput from "../../components/CustomInput";
+import CustomTilt from "../../components/CustomTilt";
 import ProductItem from "../../components/ProductItem";
 import SpaceTop from "../../components/SpaceTop";
 import CategoriesSection from "../../components/ui/CategoriesSection";
@@ -51,6 +52,8 @@ const Home = () => {
   const commonStyles = useCommonStyles();
   const homeClasses = useStyles();
   const matches = useMediaQuery("(min-width:600px)");
+  const matchesMobile = useMediaQuery("(max-width:479px)");
+
   const [mount, setMount] = useState(false);
 
   const [products, setProducts] = useState([]);
@@ -61,7 +64,7 @@ const Home = () => {
     categories: "",
   });
   const [categories, setcategories] = useState(constants.objCategories);
-  const [limit, setlimit] = useState(50);
+  const [limit, setlimit] = useState(20);
   const [selectedStorage, setselectedStorage] = useState("");
   const [debouncedproductsRangeValues] = useDebounce(rangeValues, 700);
   const [debounceselectedStorageType] = useDebounce(selectedStorage, 700);
@@ -71,6 +74,7 @@ const Home = () => {
     productsSearchData.categories,
     700
   );
+  const [scrolled,setscrolled] = useState(false)
   useEffect(() => {
     if (!mount) {
       setMount(true);
@@ -81,7 +85,7 @@ const Home = () => {
   const loadProducts = (
     minPrice = 0,
     maxPrice = 2500,
-    limit = 50,
+    limit=20,
     storageSize,
     brands = "Apple",
     splitted,
@@ -104,7 +108,11 @@ const Home = () => {
           setloading(false);
           if (data.data?.data.length > 0) {
             sethasNextPage(true);
+            if(scrolled === true){
             setProducts(products.concat(data?.data?.data ?? []));
+            }else{
+              setProducts(data?.data?.data ?? []);
+            }
           } else {
             setProducts([]);
             sethasNextPage(false)
@@ -270,6 +278,7 @@ const Home = () => {
 
   function handleLoadMore() {
     setloading(true);
+    setscrolled(true)
     setlimit(limit + 20);
     loadProducts(
       rangeValues?.[0],
@@ -277,6 +286,7 @@ const Home = () => {
       limit + 20,
       selectedStorage
     );
+    
   }
 
   return (
@@ -292,32 +302,40 @@ const Home = () => {
                 AVAILABLE STOCK HERE
               </h1>
             </div>
-            <div className={clsx(styles.d_inline_flex, styles.flex_wrap)}>
+            <div className={clsx((styles.d_inline_flex), styles.flex_wrap,styles.mobile_search)}>
               <div>
                 <CustomInput
                   handleChange={(e) => handleSearchChange(e, "keywords")}
                   value={productsSearchData?.keywords}
                   id="searchproducts"
                   width={matches && "45ch"}
+                  inputProps={{
+                    fullWidth:true
+                  }}
                   placeholder="Enter Search Term (e.g IPhone x, 128GB or A1)"
                 />
               </div>
+              {matchesMobile &&<SpaceTop length={20}/>}
               <div>
                 <CustomButton
-                  width="200px"
+                  width={matches&&"200px"}
                   onClick={handleSearchClick}
-                  style={{ padding: "16px", marginLeft: "20px" }}
+                  style={{ padding: "16px", marginLeft: matches &&"20px" }}
                   endIcon={<ArrowForwardIcon />}
                   caption="Search"
                 />
               </div>
             </div>
           </Grid>
+          <Hidden xsDown>
           <Grid item xs={12} md={4}>
+            <CustomTilt>
             <div>
               <img src={appleshowcase} width="100%" alt="Apple show case" />
             </div>
+            </CustomTilt>
           </Grid>
+          </Hidden>
         </Grid>
         <SpaceTop length={90} />
         <Grid container spacing={4} className={homeClasses.bottomContainer}>
@@ -358,11 +376,10 @@ const Home = () => {
                   </Grid>
                 )}
                 {products &&
-                  !isLoading &&
                   products.length > 0 &&
                   products?.map((product, i) => (
-                    <Grid item xs={12} sm={3} md={3}>
-                      <ProductItem key={i + product?._id} product={product} />
+                    <Grid item xs={12} sm={3} md={3} key={i}>
+                      <ProductItem  product={product} />
                     </Grid>
                   ))}
               </Grid>
@@ -374,31 +391,6 @@ const Home = () => {
                 </Grid>
               )}
             </InfiniteScroller>
-
-            {/* <Grid container spacing={3} >
-              {!isLoading && products.length === 0 && (
-                <Grid item xs={12} className={homeClasses.emptyProducts}>
-                  <img src={sadface} alt="No Products" width="20%" />
-                  <h5>No Products.</h5>
-                </Grid>
-              )}
-              {products &&
-                !isLoading &&
-                products.length > 0 &&
-                products?.map((product, i) => (
-                  <Grid item xs={12} sm={3} md={3}>
-                    <ProductItem key={i + product?._id} product={product} />
-                  </Grid>
-                ))}
-
-              {(isLoading) &&
-                <Grid item xs={12} className={styles.align_center}>
-                  <div>
-                    <CustomCircularProgress />
-                  </div>
-                </Grid>
-              }
-            </Grid> */}
           </Grid>
         </Grid>
       </div>

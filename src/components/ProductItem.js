@@ -1,6 +1,5 @@
 import { makeStyles } from "@material-ui/core";
 import dummyphone from "../assets/images/dummyphone.png";
-import useCommonStyles from "../core/commonStyles";
 import { constants } from "../core/utilities";
 import CustomButton from "./CustomButton";
 import SpaceTop from "./SpaceTop";
@@ -36,9 +35,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductItem = ({ product }) => {
+const ProductItem = ({ product,key }) => {
   const productItemClasses = useStyles();
-  const commonStyles = useCommonStyles();
   return (
     <div className={productItemClasses?.root}>
       <div style={{ display: "flex", justifyContent: "space-around" }}>

@@ -34,7 +34,6 @@ export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,brands,spl
     if(maxPrice){
         query += `&maxPrice=${maxPrice}`
     }
-    // debugger
     if(storageSize){
         query += `&storageSizeString=${storageSize}`
     }
@@ -91,10 +90,6 @@ export const formatRequestUrl  = (minPrice,maxPrice,limit,storageSize,brands,spl
         }
     
     }
-    console.log('allresults',result1, result2, result3)
-    console.log('result4',final)
-    console.log('euqrrryyy',query)
-    
     
     return query
 }
@@ -124,7 +119,6 @@ export const filterObj = (obj,predicate)=>{
 
 export const extractValue = (filteredObj)=>{
     let query = ``;
-    // debugger
     for(let i in filteredObj){
         query += `,${i}`
     }

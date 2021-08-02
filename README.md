@@ -11,7 +11,7 @@
 
 
 ### Technology Stack
-- This application was developed using React, JavaScript(ES6) as well as the React Bootstrap UI library.
+- This application was developed using React, JavaScript(ES6) as well as the Material UI library.
 
 ### Principles
 
